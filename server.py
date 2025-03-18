@@ -573,7 +573,7 @@ def mark_as_paid():
             ):
                 entry["mode_of_payment"] = "Paid on "+str(date.today().strftime("%Y-%m-%d"))
                 with open('./static/bills_logs.txt', 'a') as log:
-                    # log.write(f"\n[{datetime.datetime.now()}] '{(str(current_user.id)).upper()}' Marked AWB Number '{entry["AWB Number"]}'as paid:\n \t Party Name : '{entry["Party Name"]}',\n \t consignee : '{entry["Consignee"]}', \n \t destination : '{entry["Destination"]}', \n \t number_of_pieces : '{entry["Number of Pieces"]}',\n \t weight : '{entry["Weight"]}',\n \t rate : '{entry["Rate"]}', \n \t gst : '{entry["GST"]}', \n \t total_cost : '{entry["Total Cost"]}', \n \t mode_of_payment : '{entry["mode_of_payment"]}' \n")
+                    log.write(f"\n[{datetime.datetime.now()}] '{(str(current_user.id)).upper()}' Marked AWB Number '{entry["AWB Number"]}'as paid:\n \t Party Name : '{entry["Party Name"]}',\n \t consignee : '{entry["Consignee"]}', \n \t destination : '{entry["Destination"]}', \n \t number_of_pieces : '{entry["Number of Pieces"]}',\n \t weight : '{entry["Weight"]}',\n \t rate : '{entry["Rate"]}', \n \t gst : '{entry["GST"]}', \n \t total_cost : '{entry["Total Cost"]}', \n \t mode_of_payment : '{entry["mode_of_payment"]}' \n")
                     log.write("\n--------------------------------------\n")
                 print(f"marked: {entry['Date']} {type(entry['Date'])} {((datetime.datetime.strptime(str(entry["Date"]), "%d-%m-%Y").date()) >= date1)} ")
         except Exception as p:
@@ -635,4 +635,4 @@ def download_log(filename):
 
 if __name__ == "__main__":
     initialize_csv()
-    app.run()
+    app.run(host='0.0.0.0', port=3000)
