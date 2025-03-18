@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit/View Entries</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Bootstrap CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+<!-- jQuery (required for Bootstrap JavaScript) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Popper.js (required for Bootstrap tooltips and modals) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+
+<!-- Bootstrap JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        .modal {
+    display: none;
+}
+.modal.show {
+    display: block;
+    background-color: rgba(0, 0, 0, 0.5); /* Optional for backdrop effect */
+}
+    </style>
+</head>
+
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center">Edit/View Entries</h1>
+        {% if entries %}
+        <table class="table table-bordered mt-4">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Date</th>
+                    <th>AWB Number</th>
+                    <th>Party Name</th>
+                    <th>Consignee</th>
+                    <th>Destination</th>
+                    <th>Pieces</th>
+                    <th>Weight</th>
+                    <th>Rate</th>
+                    <th>GST</th>
+                    <th>Total Cost</th>
+                    <th>Mode of Payment</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for entry in entries %}
+<tr>
+    <td>{{ loop.index }}</td> <!-- loop.index gives the 1-based index -->
+    <td>{{ entry['Date'] }}</td>
+    <td>{{ entry['AWB Number'] }}</td>
+    <td>{{ entry['Party Name'] }}</td>
+    <td>{{ entry['Consignee'] }}</td>
+    <td>{{ entry['Destination'] }}</td>
+    <td>{{ entry['Number of Pieces'] }}</td>
+    <td>{{ entry['Weight'] }}</td>
+    <td>{{ entry['Rate'] }}</td>
+    <td>{{ entry['GST'] }}</td>
+    <td>{{ entry['Total Cost'] }}</td>
+    <td>{{ entry['mode_of_payment'] }}</td>
+    <td>
+        <button
+    class="btn btn-primary"
+    data-entry='{{ entry | tojson}}'
+    onclick="openEditModal(this)">
+    Edit
+</button>
+
+        
+    </td>
+</tr>
+{% endfor %}
+
+
+            </tbody>
+        </table>
+        {% else %}
+        <p class="text-center mt-4">No entries available.</p>
+        {% endif %}
+    </div>
+
+    <!-- Edit Modal -->
+    <!-- Edit Modal -->
+    <div class="modal" id="edit-modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Entry</h5>
+                    <button type="button" class="close" onclick="closeEditModal()">&times;</button>
+                </div>
+                <form id="edit-form" method="POST" action="/edit_view">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="edit-awb">AWB Number</label>
+                            <input type="text" id="edit-awb" name="awb" class="form-control" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-party-name">Party Name</label>
+                            <input type="text" id="edit-party-name" name="party_name" class="form-control" required>
+                        </div>
+                        <!-- Add more input fields as required -->
+                        <div class="form-group">
+                            <label for="edit-consignee">Consignee</label>
+                            <input type="text" id="edit-consignee" name="consignee" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-destination">Destination</label>
+                            <input type="text" id="edit-destination" name="destination" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-pieces">edit-pieces</label>
+                            <input type="text" id="edit-pieces" name="number_of_pieces" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-weight">edit-weight</label>
+                            <input type="text" id="edit-weight" name="weight" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-rate">edit-rate</label>
+                            <input type="text" id="edit-rate" name="rate" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-gst">gst</label>
+                            <input type="text" id="edit-gst" name="gst" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-total-cost">total-cost</label>
+                            <input type="text" id="edit-total-cost" name="total_cost" class="form-control" required>
+                        </div>
+                        <select id="edit-payment-mode" name="mode_of_payment" class="form-control" required>
+                            <option value="cash">Cash</option>
+                            <option value="credit">Credit</option>
+                            <option value="toPay">To-Pay</option>
+                        </select>
+                        <!-- Repeat for other fields -->
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success">Save Changes</button>
+                        <button type="button" class="btn btn-secondary" onclick="closeEditModal()">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        const formData = JSON.parse('{{ entries | tojson | safe }}');
+
+
+        function openEditModal(button) {
+            // Extract entry details from the button's data attributes
+            const entryJson = button.getAttribute('data-entry');
+            const entry = JSON.parse(entryJson);
+            // console.log(entry)
+
+            console.log("Editing entry:", entry);
+
+            // Populate modal fields
+            document.getElementById("edit-awb").value = entry["AWB Number"];  // AWB Number (read-only)
+            document.getElementById("edit-party-name").value = entry["Party Name"];
+            document.getElementById("edit-consignee").value = entry["Consignee"];
+            document.getElementById("edit-destination").value = entry["Destination"];
+            document.getElementById("edit-pieces").value = entry["Number of Pieces"];
+            document.getElementById("edit-weight").value = entry["Weight"];
+            document.getElementById("edit-rate").value = entry["Rate"];
+            document.getElementById("edit-gst").value = entry["GST"];
+            document.getElementById("edit-total-cost").value = entry["Total Cost"];
+            document.getElementById("edit-payment-mode").value = entry["mode_of_payment"];
+            // const selectElement = document.getElementById("mode-of-payment");
+            // selectElement.value = entry["mode_of_payment"];
+
+            // Show the modal
+            document.getElementById('edit-modal').classList.add('show');
+            // document.getElementById('edit-modal').style.display = 'block';
+        }
+        
+        function closeEditModal() {
+            document.getElementById('edit-modal').classList.remove('show');
+            // document.getElementById('edit-modal').style.display = 'block';
+        }
+    </script>
+
+</body>
+
+</html>

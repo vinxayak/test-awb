@@ -1,0 +1,11 @@
+
+[2024-12-08 09:38:59.200192] 'ADMIN' Marked AWB Number '13'as paid:
+ 	 Party Name : 'SALMAAN',
+ 	 consignee : 'PARUL', 
+ 	 destination : 'AMRITSAR', 
+ 	 number_of_pieces : '3444',
+ 	 weight : '766',
+ 	 rate : '566', 
+ 	 gst : '78040', 
+ 	 total_cost : '511596', 
+ 	 mode_of_payment : 'toPay' 
