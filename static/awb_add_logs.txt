@@ -1,0 +1,95 @@
+[2024-12-07 13:13:00.208151] 'GULSHAN' Added AWB Number '8':
+ 	 Party Name : 'SARKAR',
+ 	 consignee : 'MAKKAAR', 
+ 	 destination : 'PATIALA', 
+ 	 number_of_pieces : '69',
+ 	 weight : '25',
+ 	 rate : '55', 
+ 	 gst : '247.50', 
+ 	 total_cost : '1622.50', 
+ 	 mode_of_payment : 'toPay' 
+
+[2024-12-07 13:13:50.322571] 'GULSHAN' Added AWB Number '9':
+ 	 Party Name : 'SARKAR',
+ 	 consignee : 'MAKKAAR', 
+ 	 destination : 'PATIALA', 
+ 	 number_of_pieces : '69',
+ 	 weight : '25',
+ 	 rate : '55', 
+ 	 gst : '247.50', 
+ 	 total_cost : '1622.50', 
+ 	 mode_of_payment : 'toPay' 
+
+[2024-12-07 13:13:52.717133] 'GULSHAN' Added AWB Number '10':
+ 	 Party Name : 'SARKAR',
+ 	 consignee : 'MAKKAAR', 
+ 	 destination : 'PATIALA', 
+ 	 number_of_pieces : '69',
+ 	 weight : '25',
+ 	 rate : '55', 
+ 	 gst : '247.50', 
+ 	 total_cost : '1622.50', 
+ 	 mode_of_payment : 'toPay' 
+
+[2024-12-07 13:13:54.191621] 'GULSHAN' Added AWB Number '11':
+ 	 Party Name : 'SARKAR',
+ 	 consignee : 'MAKKAAR', 
+ 	 destination : 'PATIALA', 
+ 	 number_of_pieces : '69',
+ 	 weight : '25',
+ 	 rate : '55', 
+ 	 gst : '247.50', 
+ 	 total_cost : '1622.50', 
+ 	 mode_of_payment : 'toPay' 
+
+[2024-12-07 13:14:23.613418] 'GULSHAN' Added AWB Number '12':
+ 	 Party Name : 'SARKAR',
+ 	 consignee : 'MAKKAAR', 
+ 	 destination : 'PATIALA', 
+ 	 number_of_pieces : '69',
+ 	 weight : '25',
+ 	 rate : '55', 
+ 	 gst : '247.50', 
+ 	 total_cost : '1622.50', 
+ 	 mode_of_payment : 'toPay' 
+
+[2024-12-07 13:41:01.294213] 'ADMIN' Added AWB Number '13':
+ 	 Party Name : 'SALMAAN',
+ 	 consignee : 'PARUL', 
+ 	 destination : 'AMRITSAR', 
+ 	 number_of_pieces : '3444',
+ 	 weight : '766',
+ 	 rate : '566', 
+ 	 gst : '78040', 
+ 	 total_cost : '511596', 
+ 	 mode_of_payment : 'cash' 
+[2024-12-07 15:58:39.205765] 'ADMIN' LOGGED IN[2024-12-08 20:29:32.756160] 'ADMIN' LOGGED IN
+--------------------------------------
+
+[2024-12-08 20:53:39.743937] 'ADMIN' Added AWB Number '14':
+ 	 Party Name : 'RAJIV',
+ 	 consignee : 'VINAYAK', 
+ 	 destination : 'DELHI', 
+ 	 number_of_pieces : '2',
+ 	 weight : '5',
+ 	 rate : '8', 
+ 	 gst : '7', 
+ 	 total_cost : '47', 
+ 	 mode_of_payment : 'cash' 
+
+--------------------------------------
+[2025-03-18 18:58:54.999197] 'ADMIN' LOGGED IN
+--------------------------------------
+
+[2025-03-18 19:02:46.656996] 'ADMIN' Added AWB Number '40':
+ 	 Party Name : 'TESTING LATEST',
+ 	 consignee : 'KURLA', 
+ 	 destination : 'GOA', 
+ 	 number_of_pieces : '56',
+ 	 weight : '766',
+ 	 rate : '233', 
+ 	 gst : '32126', 
+ 	 total_cost : '210604', 
+ 	 mode_of_payment : 'credit' 
+
+--------------------------------------

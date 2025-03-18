@@ -1,0 +1,86 @@
+
+[2024-12-08 09:43:32.683277] 'ADMIN' Marked AWB Number '13'as paid:
+ 	 Party Name : 'SALMAAN',
+ 	 consignee : 'PARUL', 
+ 	 destination : 'AMRITSAR', 
+ 	 number_of_pieces : '3444',
+ 	 weight : '766',
+ 	 rate : '566', 
+ 	 gst : '78040', 
+ 	 total_cost : '511596', 
+ 	 mode_of_payment : 'toPay' 
+--------------------------------------
+
+[2024-12-08 09:43:45.068300] 'ADMIN' Marked AWB Number '13'as paid:
+ 	 Party Name : 'SALMAAN',
+ 	 consignee : 'PARUL', 
+ 	 destination : 'AMRITSAR', 
+ 	 number_of_pieces : '3444',
+ 	 weight : '766',
+ 	 rate : '566', 
+ 	 gst : '78040', 
+ 	 total_cost : '511596', 
+ 	 mode_of_payment : 'toPay' 
+--------------------------------------
+
+[2024-12-08 11:10:20.274050] 'ADMIN' Marked AWB Number '13'as paid:
+ 	 Party Name : 'SALMAAN',
+ 	 consignee : 'PARUL', 
+ 	 destination : 'AMRITSAR', 
+ 	 number_of_pieces : '3444',
+ 	 weight : '766',
+ 	 rate : '566', 
+ 	 gst : '78040', 
+ 	 total_cost : '511596', 
+ 	 mode_of_payment : 'Paid on 2024-12-08' 
+--------------------------------------
+
+[2024-12-08 11:40:25.801179] 'ADMIN' Marked AWB Number '13'as paid:
+ 	 Party Name : 'SALMAAND',
+ 	 consignee : 'PARUL', 
+ 	 destination : 'AMRITSAR', 
+ 	 number_of_pieces : '3444',
+ 	 weight : '766',
+ 	 rate : '566', 
+ 	 gst : '78040', 
+ 	 total_cost : '511596', 
+ 	 mode_of_payment : 'Paid on 2024-12-08' 
+--------------------------------------
+
+[2024-12-08 11:52:45.375040] 'ADMIN' Marked AWB Number '13'as paid:
+ 	 Party Name : 'SALMAAND',
+ 	 consignee : 'PARUL', 
+ 	 destination : 'AMRITSAR', 
+ 	 number_of_pieces : '3444',
+ 	 weight : '766',
+ 	 rate : '566', 
+ 	 gst : '78040', 
+ 	 total_cost : '511596', 
+ 	 mode_of_payment : 'Paid on 2024-12-08' 
+--------------------------------------
+
+[2024-12-08 21:11:21.723216] 'ADMIN' Marked AWB Number '13'as paid:
+ 	 Party Name : 'SALMAAN',
+ 	 consignee : 'PARUL', 
+ 	 destination : 'AMRITSAR', 
+ 	 number_of_pieces : '3444',
+ 	 weight : '766',
+ 	 rate : '566', 
+ 	 gst : '78040', 
+ 	 total_cost : '511596', 
+ 	 mode_of_payment : 'Paid on 2024-12-08' 
+
+--------------------------------------
+
+[2024-12-08 21:11:21.727784] 'ADMIN' Marked AWB Number '13'as paid:
+ 	 Party Name : 'SALMAAN',
+ 	 consignee : 'PARUL', 
+ 	 destination : 'AMRITSAR', 
+ 	 number_of_pieces : '3444',
+ 	 weight : '766',
+ 	 rate : '566', 
+ 	 gst : '78040', 
+ 	 total_cost : '511596', 
+ 	 mode_of_payment : 'Paid on 2024-12-08' 
+
+--------------------------------------

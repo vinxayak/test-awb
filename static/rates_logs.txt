@@ -1,0 +1,13 @@
+2024-12-08 12:18:21 | ADMIN | Action: delete | Party: PARTY | City: CITY Y | Deleted: 257
+
+--------------------------------------
+2024-12-08 12:19:58 | ADMIN | Action: edit | Party: PARTY | City: CITY | From: 4081111 To: 408111
+
+--------------------------------------
+2024-12-08 12:20:10 | ADMIN | Action: edit | Party: PIYUSH | City: SINGH | From: None To: 237
+
+--------------------------------------
+2024-12-08 12:20:23 | ADMIN | Action: edit | Party: PIYUSH | City: SINGH | From: 237 To: 2390
+
+--------------------------------------
+2024-12-08 12:21:27 | ADMIN | Action: add | Party: B | City: HFCHGVGVH | Added: 233
