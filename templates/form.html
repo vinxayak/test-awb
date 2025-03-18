@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add AWB</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- jQuery and Bootstrap JS -->
+
+
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #121212;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background-color: #1e1e1e;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            max-width: 600px;
+            width: 100%;
+        }
+
+        h1 {
+            text-align: center;
+            color: #f0f0f0;
+            font-size: 36px;
+            margin-bottom: 30px;
+        }
+
+        .form-group label {
+            color: #ddd;
+            font-weight: bold;
+        }
+
+        .form-control {
+            background-color: #333;
+            color: #fff;
+            border: 1px solid #444;
+            border-radius: 8px;
+        }
+
+        .form-control:focus {
+            border-color: #007bff;
+            background-color: #222;
+            color: #fff;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+            color: #fff;
+            font-weight: bold;
+            padding: 12px 24px;
+            border-radius: 8px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+
+        .autocomplete-suggestions {
+            position: absolute;
+            border: 1px solid #444;
+            background-color: #222;
+            z-index: 1000;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+
+        .autocomplete-suggestion {
+            padding: 8px;
+            cursor: pointer;
+            color: #fff;
+        }
+
+        .autocomplete-suggestion:hover {
+            background-color: #333;
+        }
+
+        select.form-control {
+            background-color: #333;
+            color: #fff;
+            border: 1px solid #444;
+        }
+
+        select.form-control:focus {
+            border-color: #007bff;
+            background-color: #222;
+            color: #fff;
+        }
+
+        .modal-content {
+            background-color: #222;
+            color: #fff;
+            border-radius: 8px;
+        }
+
+        .modal-header {
+            border-bottom: 1px solid #444;
+        }
+
+        .modal-footer button {
+            font-weight: bold;
+        }
+
+        .modal-footer .btn-secondary {
+            background-color: #444;
+            color: #fff;
+        }
+
+        .modal-footer .btn-primary {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        .form-group input[readonly] {
+            background-color: #444;
+            color: #ddd;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container mt-5">
+        <a href="/" style="text-decoration: none;"><h1>Add AWB</h1></a>
+        <form method="POST" action="/add-awb" class="mt-4">
+            <div class="form-group position-relative">
+                <label for="party-name">Party Name:</label>
+                <input type="text" id="party-name" name="party_name" class="form-control" placeholder="Enter Party Name"
+                    oninput="fetchPartySuggestions(this)" required autocomplete="off">
+                <div id="party-suggestions" class="autocomplete-suggestions"></div>
+            </div>
+            <div class="form-group">
+                <label for="consignee">Consignee:</label>
+                <input type="text" id="consignee" name="consignee" class="form-control" placeholder="Consignee"
+                    required>
+            </div>
+            <div class="form-group">
+                <label for="number_of_pieces">Number of pieces:</label>
+                <input type="number" id="number_of_pieces" name="number_of_pieces" class="form-control"
+                    placeholder="Number of pieces" required>
+            </div>
+
+            <div class="form-group">
+                <label for="destination">Destination:</label>
+                <input type="text" id="destination" name="destination" class="form-control"
+                    placeholder="Enter Destination"
+                    onblur="fetchRateForParty(document.getElementById('party-name').value)" required>
+            </div>
+            <div class="form-group">
+                <label for="weight">Weight (kg):</label>
+                <input type="number" id="weight" name="weight" class="form-control" placeholder="Enter Weight"
+                    oninput="calculateCosts()" required>
+            </div>
+            <div class="form-group">
+                <label for="rate">Rate (per kg):</label>
+                <input type="number" id="rate" name="rate" class="form-control" placeholder="Enter Rate"
+                    oninput="calculateCosts()" required>
+            </div>
+            <label for="mode-of-payment">Mode of Payment:</label>
+            <div>
+                <select id="mode-of-payment" name="mode_of_payment" class="form-control" required>
+                    <option value="" disabled selected>Select a payment mode</option>
+                    <option value="cash">Cash</option>
+                    <option value="credit">Credit</option>
+                    <option value="toPay">To-Pay</option>
+                </select>
+            </div>
+            <br>
+            <div class="form-group">
+                <label for="cost">Cost:</label>
+                <input type="text" id="cost" name="cost" class="form-control" readonly>
+            </div>
+            <div class="form-group">
+                <label for="gst">GST (18%):</label>
+                <input type="text" id="gst" name="gst" class="form-control" readonly>
+            </div>
+            <div class="form-group">
+                <label for="total_cost">Total Cost:</label>
+                <input type="text" id="total_cost" name="total_cost" class="form-control" readonly>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+
+    <!-- Modal for Confirmation -->
+    <div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmationModalLabel">Confirm Your Details</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p><strong>Party Name:</strong> <span id="confirm-party-name"></span></p>
+                    <p><strong>Consignee:</strong> <span id="confirm-consignee"></span></p>
+                    <p><strong>Number of Pieces:</strong> <span id="confirm-number-of-pieces"></span></p>
+                    <p><strong>Destination:</strong> <span id="confirm-destination"></span></p>
+                    <p><strong>Weight:</strong> <span id="confirm-weight"></span> kg</p>
+                    <p><strong>Rate:</strong> <span id="confirm-rate"></span></p>
+                    <p><strong>Mode of Payment:</strong> <span id="confirm-mode-of-payment"></span></p>
+                    <p><strong>Cost:</strong> <span id="confirm-cost"></span></p>
+                    <p><strong>GST (18%):</strong> <span id="confirm-gst"></span></p>
+                    <p><strong>Total Cost:</strong> <span id="confirm-total-cost"></span></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Edit</button>
+                    <button type="button" class="btn btn-primary" id="final-submit">Confirm and Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.4.4/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+    // Debounce function
+    function debounce(func, delay) {
+        let timeout;
+        return function (...args) {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func.apply(this, args), delay);
+        };
+    }
+
+    // Autofill suggestions for Party Name
+    const fetchPartySuggestions = debounce(function (queryField) {
+        const query = queryField.value;
+        const suggestionsBox = document.getElementById("party-suggestions");
+
+        if (query.length > 0) {
+            fetch(`/search-party-names?query=${query}`)
+                .then((response) => response.json())
+                .then((data) => {
+                    suggestionsBox.innerHTML = ""; // Clear previous suggestions
+                    data.forEach((name) => {
+                        const div = document.createElement("div");
+                        div.className = "autocomplete-suggestion";
+                        div.textContent = name;
+                        div.onclick = function () {
+                            queryField.value = name;
+                            suggestionsBox.innerHTML = ""; // Clear suggestions
+                            fetchRateForParty(name);
+                        };
+                        suggestionsBox.appendChild(div);
+                    });
+                })
+                .catch((error) => console.error("Error fetching party names:", error));
+        } else {
+            suggestionsBox.innerHTML = ""; // Clear suggestions if input is empty
+        }
+    }, 300);
+
+    // Autofill rate based on Party Name and Destination
+    function fetchRateForParty(partyName) {
+        const destination = document.getElementById("destination").value;
+        fetch(`/get-rate?party_name=${partyName}&destination=${destination}`)
+            .then((response) => response.json())
+            .then((data) => {
+                console.log(data)
+                const rateField = document.getElementById("rate");
+                rateField.value = data.rate || "";
+                calculateCosts();
+            })
+            .catch((error) => console.error("Error fetching rate:", error));
+    }
+
+    // Calculate costs based on Rate and Weight
+    function calculateCosts() {
+        const weight = parseFloat(document.getElementById("weight").value) || 0;
+        const rate = parseFloat(document.getElementById("rate").value) || 0;
+        const cost = weight * rate;
+        const gst = Math.trunc(Math.round(cost * 0.18));
+        const totalCost = Math.trunc(Math.round(cost + gst));
+
+        document.getElementById("cost").value = cost;
+        document.getElementById("gst").value = gst;
+        document.getElementById("total_cost").value = totalCost;
+    }
+</script>
+<script>
+    document.querySelector("form").addEventListener("submit", function (event) {
+        event.preventDefault(); // Prevent default form submission
+
+        // Populate the confirmation modal with form values
+        document.getElementById("confirm-party-name").textContent = document.getElementById("party-name").value || "-";
+        document.getElementById("confirm-consignee").textContent = document.getElementById("consignee").value || "-";
+        document.getElementById("confirm-number-of-pieces").textContent = document.getElementById("number_of_pieces").value || "-";
+        document.getElementById("confirm-destination").textContent = document.getElementById("destination").value || "-";
+        document.getElementById("confirm-weight").textContent = document.getElementById("weight").value || "-";
+        document.getElementById("confirm-rate").textContent = document.getElementById("rate").value || "-";
+        document.getElementById("confirm-mode-of-payment").textContent = document.getElementById("mode-of-payment").value || "-";
+        document.getElementById("confirm-cost").textContent = document.getElementById("cost").value || "-";
+        document.getElementById("confirm-gst").textContent = document.getElementById("gst").value || "-";
+        document.getElementById("confirm-total-cost").textContent = document.getElementById("total_cost").value || "-";
+
+        // Show the modal
+        $("#confirmationModal").modal("show");
+    });
+
+    // Handle final submission
+    document.getElementById("final-submit").addEventListener("click", function () {
+        document.querySelector("form").submit(); // Submit the form
+    });
+
+    // Hide suggestions when clicking outside the input field
+    document.addEventListener("click", function (event) {
+        const partyNameInput = document.getElementById("party-name");
+        const suggestionsBox = document.getElementById("party-suggestions");
+
+        if (!partyNameInput.contains(event.target) && !suggestionsBox.contains(event.target)) {
+            suggestionsBox.style.display = "none"; // Hide suggestions
+        }
+    });
+
+    // Show suggestions when focusing the input field
+    document.getElementById("party-name").addEventListener("focus", function () {
+        const suggestionsBox = document.getElementById("party-suggestions");
+
+        if (this.value.trim() !== "") {
+            suggestionsBox.style.display = "block"; // Show suggestions again
+        }
+    });
+
+    // Ensure suggestions are shown when typing
+    document.getElementById("party-name").addEventListener("input", function () {
+        const suggestionsBox = document.getElementById("party-suggestions");
+        suggestionsBox.style.display = "block";
+    });
+
+</script>
+
+</html>

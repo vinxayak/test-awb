@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homepage</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #000000;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+        }
+
+        #main {
+            background-color: #000000;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(111, 0, 255, 0.3);
+            max-width: 450px;
+            width: 100%;
+        }
+
+        h1 {
+            font-size: 36px;
+            margin-bottom: 30px;
+            color: #ffffff;
+        }
+
+        .btn {
+            display: inline-block;
+            font-size: 16px;
+            font-weight: bold;
+            padding: 12px 24px;
+            margin: 12px 0;
+            border-radius: 8px;
+            text-decoration: none;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 00 4px 2px rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #ff79c6, #ff007c); /* Pink */
+            color: #fff;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #50fa7b, #2ae666); /* Green */
+            color: #fff;
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #ffb86c, #ff9248); /* Orange */
+            color: #fff;
+        }
+
+        .btn-info {
+            background: linear-gradient(135deg, #8be9fd, #57c9eb); /* Blue */
+            color: #fff;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ff5555, #ff4444); /* Red */
+            color: #fff;
+        }
+        
+        .btn-bill {
+            background: linear-gradient(135deg, #8855ff, #44ffa2); /* Red */
+            color: #fff;
+        }
+
+        .btn:focus {
+            outline: none;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+        }
+
+        .btn + .btn {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="main">
+        <h1>AWB Management System</h1>
+        <div>
+            <a href="/add-awb" class="btn btn-primary">Add AWB</a>
+            <a href="/manifest" class="btn btn-success">Show Manifest</a>
+            <a href="/navigate" class="btn btn-info">Search</a>
+            <a href="/edit_view" class="btn btn-warning">Edit/View</a>
+            <a href="{{ url_for('download_csv') }}" class="btn btn-danger">Download CSV</a>
+            <a href="/bill-generator" class="btn btn-bill">calculate bill</a>
+            <a href="/rates" class="btn btn-rates">view rates</a>
+            <a href="/show-logs" class="btn btn-rates">view logs</a>
+        </div>
+    </div>
+</body>
+</html>

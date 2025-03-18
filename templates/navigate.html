@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Navigate</title>
+    <style>
+        /* General body styling */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #121212;
+            color: #e9ecef;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        h1 {
+            color: #ff69b4;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .container {
+            background-color: #1e1e1e;
+            padding: 40px;
+            border-radius: 8px;
+            width: 100%;
+            max-width: 600px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        select,
+        input {
+            width: 100%;
+            padding: 12px;
+            background-color: #333;
+            border: 1px solid #444;
+            border-radius: 4px;
+            color: #e9ecef;
+            font-size: 1rem;
+        }
+
+        #query{
+            width: 96%;
+        }
+
+        select:focus,
+        input:focus {
+            border-color: #ff69b4;
+            outline: none;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #ff69b4;
+            border: none;
+            border-radius: 4px;
+            font-size: 1.1rem;
+            color: #fff;
+            cursor: pointer;
+            transition-duration: 0.3s;
+        }
+
+        button:hover {
+            background-color: #e12c8e;
+        }
+
+        button:active {
+            background-color: #c2185b;
+        }
+
+        /* Styling for the autofill suggestions */
+        /* Styling for the autofill suggestions */
+        /* Styling for the autofill suggestions */
+        .autocomplete-suggestions {
+            position: absolute;
+            border: 1px solid #444;
+            background-color: #333;
+            z-index: 1000;
+            max-height: 150px;
+            overflow-y: auto;
+            border-radius: 4px;
+            width: 100%;
+            display: none;
+            /* Ensure it matches the width of the input field */
+            box-sizing: border-box;
+            /* Ensures padding is included within width calculation */
+            left: 0;
+            /* Align suggestions box to the left of the input field */
+            right: 0;
+            /* Ensure it doesn't extend beyond the input field */
+            max-width: 100%;
+            /* Prevents overflow beyond the input field */
+        }
+
+        /* Container for the input field, to prevent suggestion box overflow */
+        .form-group.position-relative {
+            position: relative;
+            width: 100%;
+            /* Ensures the container adjusts to the screen width */
+        }
+
+
+
+        .autocomplete-suggestion {
+            padding: 10px;
+            cursor: pointer;
+            color: #fff;
+        }
+
+        .autocomplete-suggestion:hover {
+            background-color: #ff69b4;
+        }
+    </style>
+   <script>
+    // Debounce function definition
+    function debounce(func, delay) {
+        let timeout;
+        return function (...args) {
+            clearTimeout(timeout); // Clear the previous timeout
+            timeout = setTimeout(() => func.apply(this, args), delay); // Set a new timeout
+        };
+    }
+
+    // Function to handle real-time autofill with debouncing
+    const fetchSuggestions = debounce(function (queryField) {
+        const query = queryField.value;
+        const suggestionsBox = document.getElementById("suggestions");
+
+        if (query.length > 0) {
+            fetch(`/search-party-names?query=${query}`)
+                .then((response) => response.json())
+                .then((data) => {
+                    suggestionsBox.innerHTML = ""; // Clear previous suggestions
+                    data.forEach((name) => {
+                        const div = document.createElement("div");
+                        div.className = "autocomplete-suggestion";
+                        div.textContent = name;
+                        div.onclick = function () {
+                            queryField.value = name; // Set the selected name
+                            suggestionsBox.innerHTML = ""; // Clear suggestions
+                            suggestionsBox.style.display = "none"; // Hide suggestion box
+                        };
+                        suggestionsBox.appendChild(div);
+                    });
+                    suggestionsBox.style.display = "block"; // Show suggestion box when data is available
+                })
+                .catch((error) => console.error("Error fetching party names:", error));
+        } else {
+            suggestionsBox.innerHTML = ""; // Clear suggestions if input is empty
+            suggestionsBox.style.display = "none"; // Hide suggestion box when input is empty
+        }
+    }, 300); // Debounce delay of 300ms
+
+    // Function to handle dropdown change
+    function updateInputField() {
+        const filter = document.getElementById("search-by").value;
+        const queryField = document.getElementById("query");
+        const suggestionsBox = document.getElementById("suggestions");
+
+        queryField.value = ""; // Clear input field
+        suggestionsBox.innerHTML = ""; // Clear suggestions
+
+        if (filter === "Date") {
+            queryField.type = "date";
+            queryField.placeholder = "Select Date";
+        } else if (filter === "AWB Number") {
+            queryField.type = "number";
+            queryField.placeholder = "Enter AWB Number";
+        } else if (filter === "Party Name") {
+            queryField.type = "text";
+            queryField.placeholder = "Enter Party Name";
+            queryField.oninput = function () {
+                fetchSuggestions(queryField); // Fetch suggestions when typing
+            };
+        } else {
+            queryField.type = "text";
+            queryField.placeholder = "Enter Query";
+            queryField.oninput = null; // Remove any autofill event listener
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const dropdown = document.getElementById("search-by");
+        const queryField = document.getElementById("query");
+        const suggestionsBox = document.getElementById("suggestions");
+
+        // Show/hide the suggestion box based on the dropdown selection and typing in the input field
+        dropdown.addEventListener("change", function () {
+            updateInputField(); // Update the input field based on the selection
+            suggestionsBox.style.display = "none"; // Hide suggestions when the dropdown changes
+        });
+
+        // Hide the suggestion box when clicking outside of it
+        document.addEventListener("click", function (e) {
+            if (!suggestionsBox.contains(e.target) && e.target !== queryField && e.target !== dropdown) {
+                suggestionsBox.style.display = "none"; // Hide suggestions when clicking outside
+            }
+        });
+
+        // Initialize based on the current selection in the dropdown
+        updateInputField();
+    });
+</script>
+
+</head>
+
+<body>
+    <div class="container">
+        <a href="/" style="text-decoration: none;"><h1>Search</h1></a>
+        <form method="GET" action="/search" class="mt-4 position-relative">
+            <div class="form-group">
+                <label for="search-by">Search By:</label>
+                <select id="search-by" name="filter" class="form-control" required onchange="updateInputField()">
+                    <option value="AWB Number">AWB Number</option>
+                    <option value="Party Name">Party Name</option>
+                    <option value="Destination">Destination</option>
+                    <option value="Date">Date</option>
+                </select>
+            </div>
+            <div class="form-group position-relative">
+                <label for="query">Enter Query:</label>
+                <input type="number" id="query" name="query" class="form-control" placeholder="Enter Query" required
+                    autocomplete="off">
+                <div id="suggestions" class="autocomplete-suggestions"></div>
+            </div>
+            <button type="submit">Search</button>
+        </form>
+    </div>
+</body>
+
+</html>

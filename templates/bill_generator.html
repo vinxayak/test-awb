@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bill Generator</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        body {
+            background-color: #1b1b1b;
+            color: #f8f8f2;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        h1 {
+            color: #ffffff;
+            text-shadow: 2px 2px 5px rgba(255, 0, 150, 0.5);
+        }
+
+        h2 {
+            color: #50fa7b;
+            margin-top: 40px;
+        }
+
+        table {
+            background-color: #cbdbda;
+            border-collapse: separate;
+            border-spacing: 0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        table thead th {
+            background-color: #44475a;
+            color: #ff0000;
+            text-transform: uppercase;
+        }
+
+        table tbody tr {
+            transition: all 0.3s ease;
+            color: #000000;
+        }
+
+        table tbody tr:hover {
+            background-color: #6272a4;
+        }
+
+        .form-label {
+            color: #ff79c6;
+            font-weight: bold;
+        }
+
+        .form-control {
+            background-color: #eafdfb;
+            color: #000000;
+            border: 1px solid #6272a4;
+            border-radius: 8px;
+            transition: 0.4s;
+        }
+
+        .form-control:focus {
+            background-color: #ffffff;
+            border-color: #ff79de;
+            outline: none;
+            box-shadow: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #ff79c6, #ff007c);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #50fa7b, #2ae666);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+        }
+
+        .form-check-label {
+            color: #f8f8f2;
+        }
+
+        .autocomplete-suggestions {
+            position: absolute;
+            z-index: 1000;
+            background-color: #282a36;
+            border: 1px solid #44475a;
+            border-radius: 8px;
+            max-height: 250px;
+            overflow-y: auto;
+            display: none;
+        }
+
+        .autocomplete-suggestion {
+            padding: 8px 10px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .autocomplete-suggestion:hover {
+            background-color: #6272a4;
+        }
+
+        .mt-5 {
+            margin-top: 50px;
+        }
+
+    </style>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const partyInput = document.getElementById("party_name");
+        const suggestionsBox = document.getElementById("partyNameSuggestions");
+
+        // Hide suggestions when clicking outside the input
+        document.addEventListener("click", (event) => {
+            if (!partyInput.contains(event.target) && !suggestionsBox.contains(event.target)) {
+                suggestionsBox.style.display = "none";
+            }
+        });
+
+        // Show suggestions when the input field is focused
+        partyInput.addEventListener("focus", () => {
+            if (partyInput.value.trim() !== "") {
+                suggestionsBox.style.display = "block";
+            }
+        });
+
+        // Fetch suggestions dynamically
+        partyInput.addEventListener("input", () => {
+            fetchPartySuggestions(partyInput);
+            suggestionsBox.style.display = "block"; // Ensure it's visible while typing
+        });
+    });
+
+    function fetchPartySuggestions(inputElement) {
+        const query = inputElement.value;
+        const suggestionsBox = document.getElementById("partyNameSuggestions");
+
+        if (query.length > 0) {
+            fetch(`/search-party-names?query=${query}`)
+                .then((response) => response.json())
+                .then((data) => {
+                    suggestionsBox.innerHTML = "";
+                    data.forEach((name) => {
+                        const div = document.createElement("div");
+                        div.className = "autocomplete-suggestion";
+                        div.textContent = name;
+                        div.onclick = function () {
+                            inputElement.value = name;
+                            suggestionsBox.innerHTML = "";
+                            suggestionsBox.style.display = "none"; // Hide after selection
+                        };
+                        suggestionsBox.appendChild(div);
+                    });
+
+                    // Show the suggestions box only if there are suggestions
+                    suggestionsBox.style.display = data.length > 0 ? "block" : "none";
+                })
+                .catch((error) => console.error("Error fetching party names:", error));
+        } else {
+            suggestionsBox.innerHTML = "";
+            suggestionsBox.style.display = "none"; // Hide if input is empty
+        }
+    }
+</script>
+</head>
+
+<body>
+    <div class="container mt-5">
+        <a href="/" style="text-decoration: none;"><h1 class="text-center mb-4">Bill Generator</h1></a>
+        <form method="POST" action="/bill-generator">
+            <div class="mb-3">
+                <label for="party_name" class="form-label">Party Name</label>
+                <input type="text" id="party_name" name="party_name" class="form-control" placeholder="Party name" required
+                    oninput="fetchPartySuggestions(this)" autocomplete="off">
+                <div id="partyNameSuggestions" class="autocomplete-suggestions"></div>
+            </div>
+            <div class="mb-3">
+                <label for="date" class="form-label">From Date</label>
+                <input type="date" id="date" name="date" class="form-control">
+            </div>
+            <div class="form-check mb-3">
+                <input type="checkbox" class="form-check-input" id="all_time" name="all_time">
+                <label for="all_time" class="form-check-label">All Time</label>
+            </div>
+            <button type="submit" class="btn btn-primary">Generate Bill</button>
+        </form>
+
+        {% if bill_data %}
+        <h2 class="mt-5">Bill Details for {{ request.form.get("party_name") }}</h2>
+        <table class="table table-bordered mt-3">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Date</th>
+                    <th>AWB Number</th>
+                    <th>Party Name</th>
+                    <th>Consignee</th>
+                    <th>Destination</th>
+                    <th>No. of pieces</th>
+                    <th>Weight</th>
+                    <th>Rate</th>
+                    <th>GST</th>
+                    <th>Total Cost</th>
+                    <th>Mode of payment</th>
+                    
+                </tr>
+            </thead>
+            <tbody>
+                {% for index, entry in bill_data %}
+                <tr>
+                    <td>{{ index + 1 }}</td>
+                    <td>{{ entry["Date"] }}</td>
+                    <td>{{ entry["AWB Number"] }}</td>
+                    <td>{{ entry["Party Name"] }}</td>
+                    <td>{{ entry["Consignee"] }}</td>
+                    <td>{{ entry["Destination"] }}</td>
+                    <td>{{ entry["Number of Pieces"] }}</td>
+                    <td>{{ entry["Weight"] }}</td>
+                    <td>{{ entry["Rate"] }}</td>
+                    <td>{{ entry["GST"] }}</td>
+                    <td>{{ entry["Total Cost"] }}</td>
+                    <td>{{ entry["mode_of_payment"] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="mt-3">
+            <h4>Total Bill Amount: {{ total_amount }}</h4>
+            <h4>Total GST Amount: {{ total_gst }}</h4>
+        </div>
+        <form method="POST" action="/mark-as-paid" class="mt-4">
+            <input type="text" name="party_name" value="{{ request.form.get('party_name', '') }}"
+                class="form-control mb-2" placeholder="Party Name">
+            <input type="date" name="date" value="{{ request.form.get('date', '') }}" class="form-control mb-2">
+            <div class="form-check">
+                <input type="checkbox" class="form-check-input" name="all_time" value="true"
+                    {% if request.form.get('all_time') in ['true', 'on'] %}checked{% endif %}>
+                <label class="form-check-label">All Time</label>
+            </div>
+            <button type="submit" class="btn btn-success mt-3">Mark as Paid</button>
+        </form>
+        {% endif %}
+    </div>
+</body>
+
+</html>

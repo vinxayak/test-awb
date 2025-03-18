@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rates Management</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #212529;
+            color: #e9ecef;
+        }
+
+        .container {
+            margin-top: 50px;
+        }
+
+        table {
+            background-color: #343a40;
+            color: #e9ecef;
+            border-radius: 8px;
+        }
+
+        th,
+        td {
+            text-align: center;
+            padding: 12px;
+        }
+
+        th {
+            background-color: #495057;
+            color: red;
+        }
+
+        tr:nth-child(even) {
+            background-color: #495057;
+            color: white;
+        }
+        tr:nth-child(odd) {
+            color: rgb(116, 223, 255);
+        }
+
+        tr:hover {
+            background-color: #575d63;
+        }
+
+        .btn-primary {
+            margin-right: 5px;
+        }
+
+        .btn-danger {
+            margin-left: 5px;
+        }
+
+        .autocomplete-suggestions {
+            position: absolute;
+            background-color: #343a40;
+            color: #e9ecef;
+            border: 1px solid #495057;
+            z-index: 1000;
+            max-height: 150px;
+            overflow-y: auto;
+            /* display: none; */
+        }
+
+        .autocomplete-suggestion {
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        .autocomplete-suggestion:hover {
+            background-color: #575d63;
+        }
+        #a:visited{
+            color: white !important;
+        }
+        /* #addPartySuggestions{
+            display: none;
+        }
+        #editPartySuggestions{
+            display: none;
+        } */
+
+        .modal-content{
+            background-color: rgb(19, 17, 17);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <a id="a" href="/" style="text-decoration: none;"><h1 class="text-center mb-4" style="color: white;">Rates Management</h1></a>
+
+        <!-- Add Rate Button -->
+        <button class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#addModal">Add Rate</button>
+
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Party</th>
+                    <th>City</th>
+                    <th>Rate</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for party, cities in rates.items() %}
+                {% for city, rate in cities.items() %}
+                <tr>
+                    <td>{{ party }}</td>
+                    <td>{{ city }}</td>
+                    <td>{{ rate }}</td>
+                    <td>
+                        <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editModal"
+                            onclick="populateEditModal('{{ party }}', '{{ city }}', '{{ rate }}')">Edit</button>
+                        <form method="POST" action="/delete-rate" style="display: inline-block;">
+                            <input type="hidden" name="party" value="{{ party }}">
+                            <input type="hidden" name="city" value="{{ city }}">
+                            <button class="btn btn-danger btn-sm">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+<!-- Add Modal -->
+<div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addModalLabel">Add New Rate</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="/rates" id="addRateForm">
+                    <input type="hidden" name="action" value="add">
+                    <div class="mb-3">
+                        <label for="addParty" class="form-label">Party</label>
+                        <input type="text" id="addParty" name="party" class="form-control" required autocomplete="off" oninput="fetchPartySuggestions(this)">
+                        <div id="addPartySuggestions" class="autocomplete-suggestions"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="addCity" class="form-label">City</label>
+                        <input type="text" id="addCity" name="city" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="addRate" class="form-label">Rate</label>
+                        <input type="number" id="addRate" name="rate" class="form-control" required>
+                    </div>
+                    <button type="submit" class="btn btn-success">Add Rate</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Modal -->
+<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editModalLabel">Edit Rate</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="/rates" id="editRateForm">
+                    <input type="hidden" name="action" value="edit">
+                    <div class="mb-3">
+                        <label for="editParty" class="form-label">Party</label>
+                        <input type="text" id="editParty" name="party" class="form-control" required autocomplete="off" oninput="fetchPartySuggestions(this)">
+                        <div id="editPartySuggestions" class="autocomplete-suggestions"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editCity" class="form-label">City</label>
+                        <input type="text" id="editCity" name="city" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editRate" class="form-label">Rate</label>
+                        <input type="number" id="editRate" name="rate" class="form-control" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    // Populate Edit Modal
+    function populateEditModal(party, city, rate) {
+        document.getElementById("editParty").value = party;
+        document.getElementById("editCity").value = city;
+        document.getElementById("editRate").value = rate;
+    }
+
+    // Fetch party name suggestions
+    function fetchPartySuggestions(inputField) {
+        const query = inputField.value;
+        const suggestionsBox = inputField.id === "addParty"
+            ? document.getElementById("addPartySuggestions")
+            : document.getElementById("editPartySuggestions");
+
+        if (query.length > 0) {
+            fetch(`/search-party-names?query=${query}`)
+                .then(response => response.json())
+                .then(data => {
+                    suggestionsBox.innerHTML = ""; // Clear previous suggestions
+                    data.forEach(name => {
+                        const div = document.createElement("div");
+                        div.className = "autocomplete-suggestion";
+                        div.textContent = name;
+                        div.onclick = function () {
+                            inputField.value = name; // Set the selected name
+                            suggestionsBox.innerHTML = ""; // Clear suggestions
+                        };
+                        suggestionsBox.appendChild(div);
+                    });
+                })
+                .catch(error => console.error("Error fetching party names:", error));
+        } else {
+            suggestionsBox.innerHTML = ""; // Clear suggestions if input is empty
+        }
+    }
+
+    // Hide suggestions when clicking outside the input box or suggestions box
+    document.addEventListener("click", function (event) {
+        const addPartyInput = document.getElementById("addParty");
+        const editPartyInput = document.getElementById("editParty");
+        const addSuggestionsBox = document.getElementById("addPartySuggestions");
+        const editSuggestionsBox = document.getElementById("editPartySuggestions");
+
+        // Hide suggestions if the click is outside the input fields and suggestions boxes
+        if (!addPartyInput.contains(event.target) && !addSuggestionsBox.contains(event.target)) {
+            addSuggestionsBox.innerHTML = "";
+        }
+        if (!editPartyInput.contains(event.target) && !editSuggestionsBox.contains(event.target)) {
+            editSuggestionsBox.innerHTML = "";
+        }
+    });
+
+    // Show suggestions when clicking inside the input field
+    document.getElementById("addParty").addEventListener("click", function () {
+        document.getElementById("addPartySuggestions").style.display = 'block';
+    });
+
+    document.getElementById("editParty").addEventListener("click", function () {
+        document.getElementById("editPartySuggestions").style.display = 'block';
+    });
+</script>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
