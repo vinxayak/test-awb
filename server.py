@@ -53,7 +53,7 @@ def login():
             user = User(username)
             login_user(user)
             session.permanent = True
-            with open("./static/awb_add_logs.txt", "a") as log:
+            with open("./static/login.txt", "a") as log:
                 log.write(f"[{datetime.datetime.now()}] '{(str(current_user.id)).upper()}' LOGGED IN")
                 log.write("\n--------------------------------------\n")
             return redirect(url_for("home"))
