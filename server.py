@@ -26,7 +26,8 @@ login_manager.login_view = 'login'
 # Dummy user database
 USER_DATABASE = {
     "admin": "scrypt:32768:8:1$gat0fsAktSVqwyMS$847099b9bacbaa5a1a52e6fcd4dd036747824dced1302664eb731887c7135cc7c4f707d3373bbb836bc9a0834359ac655cd1f828762b35531f614248d4c9055e",  # username: password
-    "gulshan": "scrypt:32768:8:1$NtmqkXIetNPUMzDb$34de47397c7fb3d0e5cc3c2e17f398af2fe1cacf191b5757a9f934e7ee7cb36798578595433e92f9090d8265402e5415174d8c04ae0eaaa1258939f3e860b092"
+    "gulshan": "scrypt:32768:8:1$NtmqkXIetNPUMzDb$34de47397c7fb3d0e5cc3c2e17f398af2fe1cacf191b5757a9f934e7ee7cb36798578595433e92f9090d8265402e5415174d8c04ae0eaaa1258939f3e860b092",
+    "test": "scrypt:32768:8:1$08dbS2ZDwWa2jv7R$68c19829afbab062af25297ad22e0885d2c393e23b7755a477125485633e0b1ab00dca68b6c05bce534eef31121707eafcc304ed0b7a1477a7b475ef124a9f9b"
 }
 
 # User class for Flask-Login
